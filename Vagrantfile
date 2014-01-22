@@ -9,6 +9,9 @@ Vagrant.configure("2") do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "precise64"
   config.vm.provision :shell, :path => "bootstrap.sh"
+  #config.vm.network :forwarded_port, host:7474, guest:7474
+  config.vm.network :forwarded_port, host:8080, guest:80
+  config.vm.network :forwarded_port, host:8443, guest:443
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.

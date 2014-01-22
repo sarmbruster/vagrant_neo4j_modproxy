@@ -1,0 +1,36 @@
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+
+	ProxyPass / http://localhost:7474/
+    ProxyPassReverse / http://localhost:7474/
+
+    # additional URL paths on the proxy side does not work due to ajax issues:
+    #ProxyPass /neo4j/ http://localhost:7474/
+    #ProxyPassReverse /neo4j/ http://localhost:7474/
+
+	<Proxy *>
+		AuthType Basic
+		AuthName "Authenticate for Neo4j access"
+	
+	    # for simplicity we use authentication based on a htpasswd file here
+	    # the credentials for the example are user:neo4j pass:neo4j
+	    # you can easily switch the following lines below to use e.g. LDAP based authentication, 
+	    # see http://httpd.apache.org/docs/2.2/mod/mod_authnz_ldap.html
+		
+		AuthUserFile /vagrant/passwd
+		Require user neo4j
+		
+		#in case of group permissions:
+		#AuthGroupFile /vagrant/groups
+		#Require group GroupName
+	</Proxy>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
