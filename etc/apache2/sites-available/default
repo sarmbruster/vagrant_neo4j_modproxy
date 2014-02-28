@@ -2,7 +2,11 @@
 	ServerAdmin webmaster@localhost
 
 	ProxyPass / http://localhost:7474/
-    ProxyPassReverse / http://localhost:7474/
+  ProxyPassReverse / http://localhost:7474/
+  <Location /db/manage>
+     AddOutputFilterByType SUBSTITUTE application/json
+     Substitute "s|http://localhost:7474|http://localhost:8080|n"
+  </Location>
 
     # additional URL paths on the proxy side does not work due to ajax issues:
     #ProxyPass /neo4j/ http://localhost:7474/
@@ -19,11 +23,13 @@
 		
 		AuthUserFile /vagrant/passwd
 		Require user neo4j
-		
+
 		#in case of group permissions:
 		#AuthGroupFile /vagrant/groups
 		#Require group GroupName
 	</Proxy>
+
+
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 
